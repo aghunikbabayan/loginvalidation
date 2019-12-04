@@ -4,6 +4,7 @@ session_start();
 // validate token
 $token = isset($_SESSION['csrf']) ? $_SESSION['csrf'] : "";
 
+//check if request comes from our index page, otherwise blocks bots
 if ( $token && $_POST['token'] === $token ) {
 
     $username = $_POST['username'];
@@ -16,6 +17,7 @@ if ( $token && $_POST['token'] === $token ) {
 
     $response = json_decode($json_response);
 
+    //if user data is correct, function returns true
     if( $response->success ) {
 
         echo $response->message;
@@ -26,6 +28,7 @@ if ( $token && $_POST['token'] === $token ) {
         header( "refresh:3;url=index.php" );
     }
 
+    //delete csrf token
     unset($_SESSION['csrf']);
 } else {
 

@@ -17,7 +17,7 @@ class Login{
             ]);
         }
         else{
-
+            //if login and password wrong, record unsuccessful attempt
             $this->addFailedLoginAttempt();
 
             return json_encode([
@@ -34,6 +34,7 @@ class Login{
         $json_data = file_get_contents( './data.json', true);
         $data_rows = json_decode( $json_data );
 
+        //check if data.json isnot empty and there is row with user ip
         if( $data_rows && isset($data_rows->$user_ip) )
         {
             $user_row            = $data_rows->$user_ip;
@@ -46,6 +47,7 @@ class Login{
         return false;
     }
 
+    //check if user reach blocked limit or allowed to login now
     private function handle_attempts_count( $count, $last_attempt ) {
 
         if( $count < 5 )
@@ -74,6 +76,7 @@ class Login{
         }
     }
 
+    //get passwords from github list and check with user input
     private function password_validate( $password )
     {
         $curl = curl_init('https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/10-million-password-list-top-10000.txt');

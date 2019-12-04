@@ -1,13 +1,17 @@
 <?php
 require_once ('functions.php');
+
+//if user tried 10 times already redirect to blocked page
 check_if_user_can_login();
 
 
     session_start();
+    //check if csrf token is in session storage
     $token = isset($_SESSION['csrf']) ? $_SESSION['csrf'] : "";
 
     if ( ! $token )
     {
+        //generate random token for csrf
         $token = md5(uniqid());
         $_SESSION['csrf']= $token;
     }
