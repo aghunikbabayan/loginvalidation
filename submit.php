@@ -1,4 +1,9 @@
 <?php
+require_once ('functions.php');
+
+//if user tried 10 times already redirect to blocked page
+check_if_user_can_login();
+
 session_start();
 
 // validate token

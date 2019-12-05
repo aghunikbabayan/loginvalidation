@@ -9,7 +9,7 @@ class Login{
         $cannotlogin = $this->cannotlogin();
         if( $cannotlogin ) return $cannotlogin;
 
-        if( $username == 'admin' && $this->password_validate( $password ) ) {
+        if( $username == 'admin' && $password == 'mypass') {
 
             return json_encode([
                 'success' => true,
@@ -50,7 +50,7 @@ class Login{
     //check if user reach blocked limit or allowed to login now
     private function handle_attempts_count( $count, $last_attempt ) {
 
-        if( $count < 5 )
+        if( $count <= 5 )
         {
           return false;
         }
@@ -74,19 +74,6 @@ class Login{
                 'message' => 'You are blocked and can not login anymore'
             ]);
         }
-    }
-
-    //get passwords from github list and check with user input
-    private function password_validate( $password )
-    {
-        $curl = curl_init('https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/10-million-password-list-top-10000.txt');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($curl,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
-
-        $page = curl_exec($curl);
-
-        $passwords_in_array = preg_split('/\r\n|\r|\n/', $page);
-        return in_array($password, $passwords_in_array) ? true : false;
     }
 
     private function addFailedLoginAttempt()
